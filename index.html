@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Succinct Scramble</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500|Open+Sans">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<script src="./bootstrap.js"></script>
+	<!--<script src="./reqproof.js"></script>-->
+<style>
+body {
+	background: #fff;
+}
+
+#canvas, #proofArea {
+	width: 30vw;
+	height: 30vw;
+
+}
+
+#proofArea {
+	-moz-appearance: textfield-multiline;
+	-webkit-appearance: textarea;
+	border: 1px solid gray;
+	font: medium -moz-fixed;
+	overflow: auto;
+	padding: 2px;
+}
+.accordion .card {
+	background: none;
+	border: none;
+}
+.accordion .card .card-header {
+	background: none;
+	border: none;
+	padding: .4rem 1rem;
+	font-family: "Roboto", sans-serif;
+}
+.accordion .card-header h2 span {
+	float: left;
+	margin-top: 10px;
+}
+.accordion .card-header .btn {
+	color: #2f2f31;
+	font-size: 1.04rem;
+	text-align: left;
+	position: relative;
+	font-weight: 500;
+	padding-left: 2rem;
+}
+.accordion .card-header i {
+	font-size: 1.2rem;
+	font-weight: bold;
+	position: absolute;
+	left: 0;
+	top: 9px;
+}
+.accordion .card-header .btn:hover {
+	color: #ff8300;
+}
+.accordion .card-body {
+	color: #324353;
+	padding: 0.5rem 3rem;
+}
+.page-title, .explanation {
+	margin: 3rem 0 3rem 1rem;
+	font-family: "Roboto", sans-serif;
+	position: relative;
+}
+.page-title::after {
+	content: "";
+	width: 80px;
+	position: absolute;
+	height: 3px;
+	border-radius: 1px;
+	background: #73bb2b;
+	left: 0;
+	bottom: -15px;
+}
+.accordion .highlight .btn {
+	color: #74bd30;
+}
+.accordion .highlight i {
+	transform: rotate(180deg);
+}
+</style>
+	<style>
+	#overlay {
+	position: fixed; /* Sit on top of the page content */
+	display: none; /* Hidden by default */
+	width: 100%; /* Full width (cover the whole page) */
+	height: 100%; /* Full height (cover the whole page) */
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+	z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+	cursor: pointer; /* Add a pointer on hover */
+	}
+
+	#text{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 50px;
+	color: white;
+	transform: translate(-50%,-50%);
+	-ms-transform: translate(-50%,-50%);
+	}
+
+
+	</style>
+<script>
+$(document).ready(function(){
+	// Add minus icon for collapse element which is open by default
+	$(".collapse.show").each(function(){
+		$(this).prev(".card-header").addClass("highlight");
+	});
+	
+	// Highlight open collapsed element 
+	$(".card-header .btn").click(function(){
+		$(".card-header").not($(this).parents()).removeClass("highlight");
+		$(this).parents(".card-header").toggleClass("highlight");
+	});
+});
+</script>
+
+</head>
+<body>
+<div class="container-lg">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-title">Succinct Provable Computation Demo</h1>
+			<div class = "explanation">
+				<p>Step 1. Correctly unscramble the tiles</p>
+				<p>Step 2. Generate a succinct, zero-knowledge proof of your achievement (without revealing exact moves)</p>
+				<p>Note: Proof will be generated locally (not via succincnt network), using the "compressed" type. It may take a couple minutes.</p>
+			</div>
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<h2 class="clearfix mb-0">
+							<a disabled class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><i class="fa fa-chevron-circle-down" disabled></i>Step 1: Play</a>
+						</h2>
+					</div>
+					<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						<div class="card-body" >
+							<div id="overlay">
+								<div id="text">Overlay Text</div>
+							</div>
+							<div class="boxx"><canvas class="main-canvas" id="canvas"></canvas></div>
+
+						</div>
+					
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingTwo">
+						<h2 class="mb-0">
+							<a disabled class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="fa fa-chevron-circle-down"></i> Step 2: Prove</a>
+						</h2>
+					</div>
+					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+						<div class="card-body">
+							<p><label for="proofArea">Proof status:</label></p><p><div id="proofArea" ></div></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<input id="proofInput" hidden>
+<button id="proofButton" ></button>
+</body>
+<script type="module">
+	//import {HTTP_API_URL} from "./constants";
+
+	//import {HTTP_API_URL} from "./constants";
+	/*window.addEventListener("error", function (e) {
+		alert("Error occurred: " + e.error.message);
+		if (e.error.message && e.error.message.includes(" Using exceptions for control flow")) {
+			console.warn(e.error.message);
+			return true;
+		}
+		return false;
+	});*/
+
+
+
+	//closePopup();
+	function parseResult(e) {
+		if (typeof e === 'string') {
+			return [e];
+		}
+
+		const lines = [];
+		const o = e.data ? JSON.parse(e.data) : e;
+		if (!o.status && !o.proof) {
+			return [o.toString()];
+		}
+		if (o.proof) {
+			let u = o.host + '/' + o.proof;
+			lines.push('Proof generation succeeded!');
+			lines.push('Public values: ' + o.public_values);
+			lines.push('Proof file:' );
+			lines.push(u);
+			return lines;
+		}
+		const status = o.status.toLowerCase();
+		if (status.includes('processing')) {
+			lines.push('Proof is being processed...');
+		} else if (status.includes('complete')) {
+			let u = o.host + '/' + o.proof_data.proof;
+			lines.push('Proof generation succeeded!');
+			lines.push('Status: ' + o.status);
+			lines.push('Public values: ' + o.proof_data.public_values);
+			lines.push('Proof file:' );
+			lines.push(u);
+		} else {
+			lines.push('Proof generation failed!');
+			lines.push('Status: ' + o.status);
+		}
+		return lines;
+
+	}
+	function printStatus(n, s) {
+		/*if (n.includes('400')) {
+			s = 'Proof generation failed: ' + s.status;
+		} else if (n.includes('200')) {
+			s = parseSuccess(s);
+		}*/
+		let lines = parseResult(s);
+
+		/*const v = document.querySelector('#proofArea').value;
+		if (v) {
+			document.querySelector('#proofArea').value = v + '\n' + s;
+		} else {
+			document.querySelector('#proofArea').value = s;
+		}*/
+		const println = (str) => {
+			console.log(str);
+			let p = document.createElement('p');
+			p.innerText = str;
+			if (str.includes('://')) {
+				let a = document.createElement('a');
+				a.setAttribute('href', str);
+				a.appendChild(p);
+				p = a;
+			}
+			document.querySelector('#proofArea').appendChild(p);
+		}
+
+		for (let line of lines) {
+			println(line);
+		}
+
+	}
+
+	console.log('button: ' + document.querySelector('button#proofButton'));
+	document.querySelector('button#proofButton').addEventListener('click', ev => {
+		let moves, score;
+		if (window.moves && window.score) {
+			console.log('found global vars');
+			moves = window.moves;
+			score = window.score;
+		} else {
+			console.log('no gloval vars, reading from input');
+			const o = JSON.parse(document.querySelector('input#proofInput').value);
+			moves = o.action_log;
+			score = o.move_count
+		}
+		moves = moves.map(wasmEl => {
+			return {
+				x : wasmEl.x,
+				y : wasmEl.y
+			}
+		});
+
+		alert('Submitting proof request');
+		submitProof(moves, score, printStatus).then(r => {
+			console.log(r);
+			const lines = parseResult(r);
+			alert(lines.join('\n'));
+		}).catch(e => {
+			alert(e);
+		});
+	});
+</script>
+<!--<script type="importmap">
+	{
+      "imports": {
+        "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.esm.min.js"
+      }
+    }
+</script>
+<script type="module">
+	import * as bootstrap from 'bootstrap.min.js';
+	const elemList = [].slice.call(document.querySelectorAll('.collapse'));
+	window.collapses = elemList.map(e => new bootstrap.Collapse);
+</script>-->
+
+<script>
+	//const elemList = [].slice.call(document.querySelectorAll('.collapse'));
+	//window.collapses = elemList.map(e => new bootstrap.Collapse(e));
+</script>
+</html>
