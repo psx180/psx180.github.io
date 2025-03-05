@@ -15,7 +15,7 @@
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   HTTP_API_URL: () => (/* binding */ HTTP_API_URL),\n/* harmony export */   WS_API_URL: () => (/* binding */ WS_API_URL)\n/* harmony export */ });\n//export const HTTP_API_URL = import.meta.env.VITE_HTTP_API_URL ?? 'http://localhost:8000';\n//export const WS_API_URL = import.meta.env.VITE_WS_API_URL ?? 'ws://localhost:8000';\n\nconst HTTP_API_URL =  'http://localhost:8000';\nconst WS_API_URL = 'ws://localhost:8000';\n\n\n//# sourceURL=webpack://not-sliding-puzzle-www/./constants.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   HTTP_API_URL: () => (/* binding */ HTTP_API_URL),\n/* harmony export */   WS_API_URL: () => (/* binding */ WS_API_URL)\n/* harmony export */ });\n//export const HTTP_API_URL = import.meta.env.VITE_HTTP_API_URL ?? 'http://localhost:8000';\n//export const WS_API_URL = import.meta.env.VITE_WS_API_URL ?? 'ws://localhost:8000';\n\nconst HTTP_API_URL =  'http://129.153.12.18';\nconst WS_API_URL = 'ws://129.153.12.18:80';\n\n\n//# sourceURL=webpack://not-sliding-puzzle-www/./constants.js?");
 
 /***/ })
 
